@@ -1,0 +1,46 @@
+SQL Documentation – EduBot
+
+
+1. Introduction - In the EduBot deployment, MySQL is used to store user interactions with the chatbot.
+				  Specifically, each user query is logged along with a timestamp. This provides a way to track user activity, 
+				  analyze common questions, and improve the chatbot’s performance over time.
+				  
+				  
+2. Database Design - The MySQL database is named "ai_chatbot", and it contains a single table called "user_queries".
+
+	
+	SQL Schema: 
+				CREATE TABLE user_queries (
+					id INT AUTO_INCREMENT PRIMARY KEY,
+					query TEXT NOT NULL,
+					timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+				);
+
+3. Integration with Streamlit - In the Streamlit app, user queries are inserted into the MySQL table after each question is submitted.
+
+		Python Code Snippet:
+							import mysql.connector
+
+							conn = mysql.connector.connect(
+								host="localhost",
+								user="root",
+								password="root",
+								database="ai_chatbot"
+							)
+							cursor = conn.cursor()
+							cursor.execute("INSERT INTO user_queries (query) VALUES (%s)", (user_query,))
+							conn.commit()
+
+
+4. Sample SQL Queries - Here are some example SQL queries for analysis:
+
+		-- Retrieve all user queries
+		SELECT * FROM user_queries;
+
+		-- Retrieve the most recent queries
+		SELECT * FROM user_queries ORDER BY timestamp DESC;
+
+		-- Count total number of queries
+		SELECT COUNT(*) FROM user_queries;
+
+
